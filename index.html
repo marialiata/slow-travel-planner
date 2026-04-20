@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slow Travel Planner — Find your next city to live in</title>
+<meta name="description" content="Find the perfect city for your next 1–6 month stay. Compare cost of living, internet speed, visa rules and nomad communities across 50+ destinations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand: #F5F0E8;
+  --sand-dark: #E8E0D0;
+  --ink: #1A1612;
+  --ink-light: #6B6258;
+  --ink-faint: #A8A09A;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --teal-dark: #0F6E56;
+  --amber: #C8882A;
+  --amber-light: #FDF3E3;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--sand);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid var(--sand-dark);
+  background: var(--sand);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: var(--ink);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+.nav-logo span { color: var(--teal); font-style: italic; }
+
+.nav-links { display: flex; gap: 1.5rem; align-items: center; }
+.nav-links a { font-size: 14px; color: var(--ink-light); text-decoration: none; }
+.nav-links a:hover { color: var(--ink); }
+
+.nav-cta {
+  background: var(--ink);
+  color: var(--sand) !important;
+  padding: 8px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 5rem 2rem 3rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.hero-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal-dark);
+  background: var(--teal-light);
+  padding: 4px 12px;
+  border-radius: 100px;
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(36px, 6vw, 58px);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  margin-bottom: 1.25rem;
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--teal);
+}
+
+.hero p {
+  font-size: 17px;
+  color: var(--ink-light);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  font-weight: 300;
+}
+
+/* SEARCH CARD */
+.search-card {
+  background: #fff;
+  border: 1px solid var(--sand-dark);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  max-width: 860px;
+  margin: 0 auto 3rem;
+}
+
+.filter-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.filter-item label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 5px;
+}
+
+.filter-item select {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--sand-dark);
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--sand);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6258' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+.budget-wrap { grid-column: 1 / -1; }
+.budget-label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.budget-label-row span:first-child { font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+.budget-amount { font-size: 15px; font-weight: 500; color: var(--ink); }
+
+input[type=range] {
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--sand-dark);
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--ink);
+  cursor: pointer;
+}
+
+.search-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--ink);
+  color: var(--sand);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  margin-top: 4px;
+}
+.search-btn:hover { background: #2d2620; }
+.search-btn:active { transform: scale(0.99); }
+.search-btn:disabled { background: #A8A09A; cursor: not-allowed; }
+
+/* RESULTS */
+.results-section { max-width: 960px; margin: 0 auto; padding: 0 2rem 4rem; }
+.results-meta { font-size: 13px; color: var(--ink-faint); margin-bottom: 16px; }
+
+.dest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.dest-card {
+  background: #fff;
+  border: 1px solid var(--sand-dark);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.dest-card:hover { border-color: var(--ink-light); transform: translateY(-2px); }
+.dest-card.active { border: 2px solid var(--teal); }
+
+.dest-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.dest-name { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--ink); }
+.dest-country { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+.dest-score { font-size: 13px; font-weight: 500; color: var(--teal-dark); background: var(--teal-light); padding: 4px 10px; border-radius: 100px; white-space: nowrap; }
+
+.dest-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.stat { background: var(--sand); border-radius: var(--radius-sm); padding: 8px 10px; }
+.stat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 3px; }
+.stat-val { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+.dest-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 100px; border: 1px solid var(--sand-dark); color: var(--ink-light); }
+
+/* DETAIL */
+.detail-panel {
+  background: #fff;
+  border: 1px solid var(--sand-dark);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 16px;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.detail-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+.detail-name { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--ink); }
+.detail-country { font-size: 14px; color: var(--ink-faint); margin-top: 2px; }
+.detail-desc { font-size: 14px; color: var(--ink-light); line-height: 1.7; margin-bottom: 16px; font-weight: 300; }
+
+.detail-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 16px; }
+.dstat { background: var(--sand); border-radius: var(--radius-sm); padding: 12px; }
+.dstat-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); margin-bottom: 4px; }
+.dstat-val { font-size: 18px; font-weight: 500; color: var(--ink); }
+
+.visa-pill { display: inline-flex; align-items: center; gap: 6px; background: var(--teal-light); color: var(--teal-dark); font-size: 13px; padding: 8px 14px; border-radius: 100px; margin-bottom: 14px; font-weight: 500; }
+
+.cowork-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-faint); margin-bottom: 8px; }
+.cowork-list { border: 1px solid var(--sand-dark); border-radius: var(--radius-sm); overflow: hidden; }
+.cowork-row { display: flex; justify-content: space-between; padding: 10px 14px; font-size: 13px; border-bottom: 1px solid var(--sand-dark); }
+.cowork-row:last-child { border-bottom: none; }
+.cowork-speed { color: var(--teal-dark); font-weight: 500; }
+
+/* PAGINATION */
+.pagination { display: flex; align-items: center; gap: 10px; justify-content: center; }
+.page-btn { padding: 8px 18px; border: 1px solid var(--sand-dark); border-radius: 100px; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; color: var(--ink); transition: all 0.15s; }
+.page-btn:hover:not(:disabled) { background: var(--ink); color: var(--sand); border-color: var(--ink); }
+.page-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.page-info { font-size: 13px; color: var(--ink-faint); }
+
+/* LOADING / EMPTY */
+.loading-state { text-align: center; padding: 3rem; color: var(--ink-faint); }
+.loading-spinner { width: 32px; height: 32px; border: 2px solid var(--sand-dark); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty-state { text-align: center; padding: 3rem; color: var(--ink-faint); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--sand-dark); padding: 2rem; text-align: center; font-size: 13px; color: var(--ink-faint); }
+footer a { color: var(--teal-dark); text-decoration: none; }
+
+/* MOBILE */
+@media (max-width: 600px) {
+  nav { padding: 1rem; }
+  .nav-links { display: none; }
+  .hero { padding: 3rem 1.5rem 2rem; }
+  .search-card { margin: 0 1rem 2rem; }
+  .results-section { padding: 0 1rem 3rem; }
+  .filter-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">Slow<span>Travel</span></a>
+  <div class="nav-links">
+    <a href="#">How it works</a>
+    <a href="#">Community</a>
+    <a href="#" class="nav-cta">Join waitlist</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <span class="hero-eyebrow">For remote workers & digital nomads</span>
+  <h1>Find the city where you'll <em>actually live</em></h1>
+  <p>Compare cost of living, internet speed, visa rules and nomad communities across 50+ destinations worldwide.</p>
+</section>
+
+<div class="search-card" style="max-width:860px;margin:0 auto 3rem;padding:1.5rem 2rem">
+  <div class="filter-row">
+    <div class="filter-item">
+      <label>Region</label>
+      <select id="f-region">
+        <option value="anywhere">Anywhere</option>
+        <option value="Europe">Europe</option>
+        <option value="Asia">Asia</option>
+        <option value="Latin America">Latin America</option>
+        <option value="Africa">Africa</option>
+        <option value="Middle East">Middle East</option>
+        <option value="North America">North America</option>
+        <option value="Oceania">Oceania</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>Climate</label>
+      <select id="f-climate">
+        <option value="any">Any</option>
+        <option value="warm">Warm / tropical</option>
+        <option value="mild">Mild / mediterranean</option>
+        <option value="cool">Cool / northern</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>Pace of life</label>
+      <select id="f-pace">
+        <option value="any">Any</option>
+        <option value="relaxed">Relaxed</option>
+        <option value="buzzing">Buzzing / urban</option>
+        <option value="nature">Nature-focused</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label>Stay length</label>
+      <select id="f-stay">
+        <option value="any">Any</option>
+        <option value="1 month">1 month</option>
+        <option value="3 months">3 months</option>
+        <option value="6 months">6 months</option>
+        <option value="1 year+">1 year+</option>
+      </select>
+    </div>
+    <div class="filter-item budget-wrap">
+      <div class="budget-label-row">
+        <span>Monthly budget</span>
+        <span class="budget-amount" id="bv">€1,500</span>
+      </div>
+      <input type="range" id="f-budget" min="600" max="5000" step="100" value="1500"
+        oninput="document.getElementById('bv').textContent='€'+Number(this.value).toLocaleString()">
+    </div>
+  </div>
+  <button class="search-btn" id="search-btn" onclick="doSearch()">Find my next city</button>
+</div>
+
+<section class="results-section">
+  <div id="results-meta" class="results-meta"></div>
+  <div id="dest-grid" class="dest-grid"></div>
+  <div id="pagination"></div>
+  <div id="detail-panel"></div>
+</section>
+
+<footer>
+  <p>© 2025 Slow Travel Planner &nbsp;·&nbsp; <a href="#">Privacy</a> &nbsp;·&nbsp; <a href="#">Contact</a></p>
+</footer>
+
+<script>
+let allCities = [];
+let currentPage = 0;
+const PER_PAGE = 9;
+
+async function doSearch() {
+  const region = document.getElementById('f-region').value;
+  const climate = document.getElementById('f-climate').value;
+  const pace = document.getElementById('f-pace').value;
+  const stay = document.getElementById('f-stay').value;
+  const budget = document.getElementById('f-budget').value;
+
+  const btn = document.getElementById('search-btn');
+  btn.disabled = true;
+  btn.textContent = 'Finding cities...';
+  document.getElementById('dest-grid').innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Searching 50+ destinations...</p></div>';
+  document.getElementById('results-meta').textContent = '';
+  document.getElementById('pagination').innerHTML = '';
+  document.getElementById('detail-panel').innerHTML = '';
+
+  const prompt = `You are a digital nomad destination database. Return ONLY a valid JSON array of exactly 20 city objects. No markdown, no explanation, no extra text — just the raw JSON array.
+
+Criteria:
+- Region: ${region}
+- Climate: ${climate}
+- Pace of life: ${pace}
+- Ideal stay length: ${stay}
+- Monthly cost of living must be under: €${budget}
+
+Each object must have exactly these fields:
+{
+  "name": "City name",
+  "country": "Country name",
+  "cost": 1200,
+  "internet": 88,
+  "nomads": 4500,
+  "visa": "90 days visa-free",
+  "score": 85,
+  "tags": ["Tag1", "Tag2", "Tag3"],
+  "desc": "Two sentences about why this city is great for remote workers.",
+  "coworkings": [
+    {"name": "Space Name", "speed": "150 Mbps"},
+    {"name": "Space Name", "speed": "200 Mbps"}
+  ]
+}
+
+Rules:
+- cost: realistic EUR monthly total (rent + food + transport + misc)
+- internet: reliability score 0–100
+- nomads: estimated number of active nomads
+- score: overall nomad-friendliness 0–100
+- tags: max 3, short descriptive labels
+- Return ONLY the JSON array. Start with [ and end with ].`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = text.replace(/```json|```/g, '').trim();
+    allCities = JSON.parse(clean);
+    currentPage = 0;
+    renderPage();
+  } catch (e) {
+    document.getElementById('dest-grid').innerHTML = '<div class="empty-state"><p>Could not load destinations. Please try again.</p></div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Find my next city';
+  }
+}
+
+function renderPage() {
+  const start = currentPage * PER_PAGE;
+  const slice = allCities.slice(start, start + PER_PAGE);
+  const total = allCities.length;
+  const totalPages = Math.ceil(total / PER_PAGE);
+
+  document.getElementById('results-meta').textContent =
+    `${total} destinations found — click any city for details`;
+
+  const grid = document.getElementById('dest-grid');
+  grid.innerHTML = '';
+  slice.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'dest-card';
+    el.id = 'card-' + c.name.replace(/\s+/g, '-');
+    el.innerHTML = `
+      <div class="dest-head">
+        <div>
+          <div class="dest-name">${c.name}</div>
+          <div class="dest-country">${c.country}</div>
+        </div>
+        <span class="dest-score">${c.score}% match</span>
+      </div>
+      <div class="dest-stats">
+        <div class="stat"><div class="stat-label">Cost / month</div><div class="stat-val">€${Number(c.cost).toLocaleString()}</div></div>
+        <div class="stat"><div class="stat-label">Internet</div><div class="stat-val">${c.internet}/100</div></div>
+        <div class="stat"><div class="stat-label">Nomads here</div><div class="stat-val">${Number(c.nomads).toLocaleString()}</div></div>
+        <div class="stat"><div class="stat-label">Visa</div><div class="stat-val" style="font-size:12px">${c.visa.split(' ').slice(0,3).join(' ')}</div></div>
+      </div>
+      <div class="dest-tags">${(c.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+    `;
+    el.onclick = () => showDetail(c);
+    grid.appendChild(el);
+  });
+
+  const pag = document.getElementById('pagination');
+  if (totalPages > 1) {
+    pag.innerHTML = `
+      <div class="pagination">
+        <button class="page-btn" onclick="changePage(-1)" ${currentPage === 0 ? 'disabled' : ''}>← Previous</button>
+        <span class="page-info">Page ${currentPage + 1} of ${totalPages}</span>
+        <button class="page-btn" onclick="changePage(1)" ${start + PER_PAGE >= total ? 'disabled' : ''}>Next →</button>
+      </div>`;
+  } else {
+    pag.innerHTML = '';
+  }
+}
+
+function changePage(dir) {
+  currentPage += dir;
+  document.getElementById('detail-panel').innerHTML = '';
+  renderPage();
+  document.querySelector('.results-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+function showDetail(c) {
+  document.querySelectorAll('.dest-card').forEach(el => el.classList.remove('active'));
+  const card = document.getElementById('card-' + c.name.replace(/\s+/g, '-'));
+  if (card) card.classList.add('active');
+
+  const coworks = (c.coworkings || []).map(cw =>
+    `<div class="cowork-row"><span>${cw.name}</span><span class="cowork-speed">${cw.speed}</span></div>`
+  ).join('');
+
+  document.getElementById('detail-panel').innerHTML = `
+    <div class="detail-panel">
+      <div class="detail-top">
+        <div>
+          <div class="detail-name">${c.name}</div>
+          <div class="detail-country">${c.country}</div>
+        </div>
+        <span class="dest-score">${c.score}% match</span>
+      </div>
+      <p class="detail-desc">${c.desc}</p>
+      <div class="detail-stats">
+        <div class="dstat"><div class="dstat-label">Cost of living</div><div class="dstat-val">€${Number(c.cost).toLocaleString()}/mo</div></div>
+        <div class="dstat"><div class="dstat-label">Internet</div><div class="dstat-val">${c.internet}/100</div></div>
+        <div class="dstat"><div class="dstat-label">Nomads</div><div class="dstat-val">${Number(c.nomads).toLocaleString()}</div></div>
+        <div class="dstat"><div class="dstat-label">Match score</div><div class="dstat-val">${c.score}%</div></div>
+      </div>
+      <div class="visa-pill">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5A5.5 5.5 0 1 1 7 12.5A5.5 5.5 0 0 1 7 1.5Z" stroke="#0F6E56" stroke-width="1.2"/><path d="M4.5 7l1.8 1.8L9.5 5" stroke="#0F6E56" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        ${c.visa}
+      </div>
+      ${coworks ? `<div class="cowork-title">Coworking spaces</div><div class="cowork-list">${coworks}</div>` : ''}
+    </div>`;
+
+  setTimeout(() => document.getElementById('detail-panel').scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+doSearch();
+</script>
+</body>
+</html>
