@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -373,81 +373,53 @@ footer a { color: var(--teal-dark); text-decoration: none; }
 </footer>
 
 <script>
+const CITIES = [
+  {name:'Lisbon',country:'Portugal',region:'Europe',climate:'mild',pace:'buzzing',cost:1300,internet:95,nomads:5200,visa:'90 days visa-free (EU)',score:92,tags:['Digital nomad visa','Safe','English-friendly'],coworkings:[{name:'Second Home Lisboa',speed:'200 Mbps'},{name:'Heden',speed:'350 Mbps'},{name:'Factory Lisbon',speed:'180 Mbps'}],desc:'The most popular nomad city in Europe. Sunshine, affordable food, strong community and a relaxed pace of life.'},
+  {name:'Tbilisi',country:'Georgia',region:'Europe',climate:'mild',pace:'relaxed',cost:850,internet:88,nomads:3100,visa:'365 days visa-free',score:89,tags:['1 year visa-free','Very affordable','Safe'],coworkings:[{name:'Impact Hub Tbilisi',speed:'150 Mbps'},{name:'Fabrika',speed:'120 Mbps'}],desc:'A hidden gem. One full year visa-free, incredibly low cost of living, and a fast-growing nomad scene.'},
+  {name:'Chiang Mai',country:'Thailand',region:'Asia',climate:'warm',pace:'relaxed',cost:900,internet:92,nomads:8000,visa:'30+60 days tourist',score:87,tags:['Very affordable','Large community','Tropical'],coworkings:[{name:'CAMP',speed:'80 Mbps'},{name:'Alt_ChiangMai',speed:'200 Mbps'},{name:'MANA',speed:'250 Mbps'}],desc:'The classic nomad city of Asia. Huge community, incredible food, warm weather and a well-established remote work scene.'},
+  {name:'Medellín',country:'Colombia',region:'Latin America',climate:'mild',pace:'buzzing',cost:1100,internet:85,nomads:4500,visa:'90 days visa-free',score:85,tags:['Eternal spring','Vibrant scene','Affordable'],coworkings:[{name:'Selina Medellin',speed:'100 Mbps'},{name:'Atomhouse',speed:'180 Mbps'}],desc:'The city of eternal spring — 22°C year-round. Buzzing nightlife, great food, and a rapidly growing nomad community.'},
+  {name:'Bali (Canggu)',country:'Indonesia',region:'Asia',climate:'warm',pace:'relaxed',cost:1200,internet:78,nomads:12000,visa:'60+30 days',score:83,tags:['Lifestyle','Huge community','Beach'],coworkings:[{name:'Dojo Bali',speed:'150 Mbps'},{name:'Outpost',speed:'120 Mbps'},{name:'Punggawa',speed:'200 Mbps'}],desc:"The nomad's Ibiza. Incredible lifestyle and the world's largest remote worker community — but expect crowds."},
+  {name:'Tallinn',country:'Estonia',region:'Europe',climate:'cool',pace:'relaxed',cost:1600,internet:99,nomads:2800,visa:'EU / Digital Nomad visa',score:88,tags:['Digital nomad visa','E-residency','Best internet EU'],coworkings:[{name:'Lift99',speed:'500 Mbps'},{name:'Spring Hub',speed:'400 Mbps'}],desc:'The most tech-forward city in the EU. E-residency, world-class infrastructure, and a stunning medieval old town.'},
+  {name:'Mexico City',country:'Mexico',region:'Latin America',climate:'mild',pace:'buzzing',cost:1400,internet:80,nomads:6000,visa:'180 days tourist',score:84,tags:['Cultural hub','Food scene','Affordable'],coworkings:[{name:'WeWork Roma',speed:'200 Mbps'},{name:'Centraal',speed:'150 Mbps'}],desc:'One of the most exciting megacities on earth. Massive, vibrant, with world-class food and a booming nomad district in Roma Norte.'},
+  {name:'Cape Town',country:'South Africa',region:'Africa',climate:'mild',pace:'nature',cost:1100,internet:75,nomads:3200,visa:'90 days tourist',score:81,tags:['Stunning nature','Affordable','Surf'],coworkings:[{name:'Workshop17',speed:'150 Mbps'},{name:'The Bureau',speed:'100 Mbps'}],desc:'Mountains, beaches, wine. An unmatched lifestyle at a fraction of European prices — with a warm and welcoming community.'},
+  {name:'Barcelona',country:'Spain',region:'Europe',climate:'mild',pace:'buzzing',cost:1800,internet:93,nomads:7000,visa:'90 days (EU)',score:88,tags:['Beach & city','Great food','Vibrant'],coworkings:[{name:'Aticco',speed:'300 Mbps'},{name:'Betahaus',speed:'250 Mbps'}],desc:'The perfect mix of city energy and beach lifestyle. World-class food, architecture, and a massive international community.'},
+  {name:'Budapest',country:'Hungary',region:'Europe',climate:'mild',pace:'buzzing',cost:1200,internet:91,nomads:4200,visa:'90 days (EU)',score:86,tags:['Affordable EU','Great nightlife','Central Europe'],coworkings:[{name:'Impact Hub Budapest',speed:'200 Mbps'},{name:'Loffice',speed:'180 Mbps'}],desc:'One of the most underrated nomad cities in Europe. Stunning architecture, affordable prices, and a lively expat scene.'},
+  {name:'Ho Chi Minh City',country:'Vietnam',region:'Asia',climate:'warm',pace:'buzzing',cost:800,internet:85,nomads:5500,visa:'90 days e-visa',score:84,tags:['Very cheap','Fast internet','Street food'],coworkings:[{name:'Toong',speed:'200 Mbps'},{name:'Dreamplex',speed:'300 Mbps'}],desc:'An energetic city with incredibly low costs. Fantastic street food, fast internet, and a growing nomad community in District 1.'},
+  {name:'Playa del Carmen',country:'Mexico',region:'Latin America',climate:'warm',pace:'relaxed',cost:1300,internet:78,nomads:3800,visa:'180 days tourist',score:80,tags:['Beach','Chill vibe','Affordable'],coworkings:[{name:'Nest Cowork',speed:'150 Mbps'},{name:'Selina PDC',speed:'100 Mbps'}],desc:'Caribbean beaches meet nomad life. A relaxed beach town with solid infrastructure, warm weather year-round and a tight-knit community.'},
+  {name:'Athens',country:'Greece',region:'Europe',climate:'warm',pace:'relaxed',cost:1400,internet:82,nomads:2900,visa:'90 days (EU)',score:82,tags:['History & sun','Affordable EU','Food'],coworkings:[{name:'Synergy',speed:'150 Mbps'},{name:'The Cube Athens',speed:'200 Mbps'}],desc:'Ancient history meets modern nomad life. Warm weather, incredible food, affordable by EU standards and a growing remote work scene.'},
+  {name:'Bansko',country:'Bulgaria',region:'Europe',climate:'cool',pace:'nature',cost:900,internet:88,nomads:1800,visa:'90 days (EU)',score:79,tags:['Mountain town','Very cheap','Ski & hike'],coworkings:[{name:'Coworking Bansko',speed:'200 Mbps'},{name:'Lucky Bansko',speed:'150 Mbps'}],desc:'Europe\'s most affordable ski resort turned nomad hotspot. Tiny mountain town with surprisingly fast internet and a cozy community.'},
+  {name:'Kuala Lumpur',country:'Malaysia',region:'Asia',climate:'warm',pace:'buzzing',cost:1000,internet:87,nomads:4100,visa:'90 days visa-free',score:83,tags:['Very affordable','Modern city','Food paradise'],coworkings:[{name:'Common Ground',speed:'250 Mbps'},{name:'Colony',speed:'200 Mbps'}],desc:'A modern, multicultural metropolis with outstanding food and very low costs. Easy visa, great infrastructure, and a hub for Southeast Asia travel.'},
+  {name:'Porto',country:'Portugal',region:'Europe',climate:'mild',pace:'relaxed',cost:1200,internet:93,nomads:3400,visa:'90 days visa-free (EU)',score:87,tags:['Digital nomad visa','Charming','Affordable'],coworkings:[{name:'Porto i/o',speed:'300 Mbps'},{name:'Cowork Porto',speed:'200 Mbps'}],desc:'Lisbon\'s charming northern cousin. Beautiful riverside city with lower costs, incredible wine, and a quieter but growing nomad scene.'},
+  {name:'Tulum',country:'Mexico',region:'Latin America',climate:'warm',pace:'nature',cost:1600,internet:70,nomads:2500,visa:'180 days tourist',score:76,tags:['Jungle & beach','Wellness','Trendy'],coworkings:[{name:'Selina Tulum',speed:'80 Mbps'},{name:'Tribal Hub',speed:'60 Mbps'}],desc:'Yoga, cenotes, and Caribbean beaches. A beautiful but pricey destination — better internet is coming fast and the nomad scene is booming.'},
+  {name:'Belgrade',country:'Serbia',region:'Europe',climate:'mild',pace:'buzzing',cost:950,internet:89,nomads:2600,visa:'90 days visa-free',score:81,tags:['Very affordable','Nightlife','No visa hassle'],coworkings:[{name:'StartIT Center',speed:'200 Mbps'},{name:'Impakt Hub',speed:'150 Mbps'}],desc:'Europe\'s best kept secret. Affordable, vibrant nightlife, visa-free for most nationalities, and a rapidly growing tech and startup scene.'},
+  {name:'Taipei',country:'Taiwan',region:'Asia',climate:'mild',pace:'buzzing',cost:1500,internet:98,nomads:3700,visa:'90 days visa-free',score:85,tags:['Best internet Asia','Safe','Food scene'],coworkings:[{name:'WeWork Taipei',speed:'500 Mbps'},{name:'The Hive',speed:'400 Mbps'}],desc:'One of the safest and most liveable cities in Asia. World\'s fastest internet, incredible night markets, and an extremely welcoming culture.'},
+  {name:'Kotor',country:'Montenegro',region:'Europe',climate:'mild',pace:'nature',cost:1000,internet:75,nomads:1200,visa:'90 days visa-free',score:77,tags:['Stunning scenery','Off the beaten path','Peaceful'],coworkings:[{name:'Kotor Cowork',speed:'100 Mbps'}],desc:'A medieval walled city on the Adriatic coast. Stunning natural beauty, very low costs, and perfect for those seeking peace and inspiration away from crowds.'},
+];
+
 let allCities = [];
 let currentPage = 0;
 const PER_PAGE = 9;
 
-async function doSearch() {
+function doSearch() {
   const region = document.getElementById('f-region').value;
   const climate = document.getElementById('f-climate').value;
   const pace = document.getElementById('f-pace').value;
   const stay = document.getElementById('f-stay').value;
-  const budget = document.getElementById('f-budget').value;
+  const budget = parseInt(document.getElementById('f-budget').value);
 
-  const btn = document.getElementById('search-btn');
-  btn.disabled = true;
-  btn.textContent = 'Finding cities...';
-  document.getElementById('dest-grid').innerHTML = '<div class="loading-state"><div class="loading-spinner"></div><p>Searching 50+ destinations...</p></div>';
-  document.getElementById('results-meta').textContent = '';
-  document.getElementById('pagination').innerHTML = '';
   document.getElementById('detail-panel').innerHTML = '';
 
-  const prompt = `You are a digital nomad destination database. Return ONLY a valid JSON array of exactly 20 city objects. No markdown, no explanation, no extra text — just the raw JSON array.
+  let results = CITIES.filter(c => {
+    if (region !== 'anywhere' && c.region !== region) return false;
+    if (climate !== 'any' && c.climate !== climate) return false;
+    if (pace !== 'any' && c.pace !== pace) return false;
+    if (c.cost > budget) return false;
+    return true;
+  }).sort((a, b) => b.score - a.score);
 
-Criteria:
-- Region: ${region}
-- Climate: ${climate}
-- Pace of life: ${pace}
-- Ideal stay length: ${stay}
-- Monthly cost of living must be under: €${budget}
-
-Each object must have exactly these fields:
-{
-  "name": "City name",
-  "country": "Country name",
-  "cost": 1200,
-  "internet": 88,
-  "nomads": 4500,
-  "visa": "90 days visa-free",
-  "score": 85,
-  "tags": ["Tag1", "Tag2", "Tag3"],
-  "desc": "Two sentences about why this city is great for remote workers.",
-  "coworkings": [
-    {"name": "Space Name", "speed": "150 Mbps"},
-    {"name": "Space Name", "speed": "200 Mbps"}
-  ]
-}
-
-Rules:
-- cost: realistic EUR monthly total (rent + food + transport + misc)
-- internet: reliability score 0–100
-- nomads: estimated number of active nomads
-- score: overall nomad-friendliness 0–100
-- tags: max 3, short descriptive labels
-- Return ONLY the JSON array. Start with [ and end with ].`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-    const data = await res.json();
-    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-    const clean = text.replace(/```json|```/g, '').trim();
-    allCities = JSON.parse(clean);
-    currentPage = 0;
-    renderPage();
-  } catch (e) {
-    document.getElementById('dest-grid').innerHTML = '<div class="empty-state"><p>Could not load destinations. Please try again.</p></div>';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Find my next city';
-  }
+  allCities = results;
+  currentPage = 0;
+  renderPage();
 }
 
 function renderPage() {
